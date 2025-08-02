@@ -1,7 +1,7 @@
-<center>
-    <h1>Pi-Tray Server</h1>
+<h1 align="center">Pi-Tray Server</h1>
+<p align="center">
     <img src="./icon.svg" />
-</center>
+</p>
 
 ---
 
