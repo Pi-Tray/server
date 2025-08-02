@@ -1,24 +1,20 @@
 import type { WebSocket } from "ws";
 
-import { add_rows_changed_listener, get_shape_of_loaded_rows } from "./data";
+import {add_grid_change_listener, get_shape_of_loaded_grid, GridChangeListener} from "./data";
 
 export const register_notifiers = (ws: WebSocket) => {
-    let last_shape = get_shape_of_loaded_rows();
-    const on_rows_changed = async () => {
-        const shape = get_shape_of_loaded_rows();
-
-        if (shape.rows === last_shape.rows && shape.cols === last_shape.cols) {
-            // shape has not changed, notifying would be redundant and expensive
+    const grid_changed: GridChangeListener = async (changes) => {
+        if (!changes.includes("shape")) {
+            // only run if the shape has changed
             return;
         }
 
         console.log("Notifying client of shape change");
-
         ws.send(JSON.stringify({
             action: "size",
-            payload: shape
+            payload: get_shape_of_loaded_grid()
         }));
     }
 
-    add_rows_changed_listener(on_rows_changed);
+    add_grid_change_listener(grid_changed);
 }

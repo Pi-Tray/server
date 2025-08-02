@@ -2,6 +2,8 @@ export default ((ws, payload) => {
     // just send dummy data for now
     // TODO: bundle all buttons into one message
 
+    return;
+
     ws.send(JSON.stringify({
         action: "set_text",
         payload: {
