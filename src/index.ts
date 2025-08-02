@@ -1,6 +1,10 @@
 import WebSocket from "ws";
 import minimist from "minimist";
 
+import * as _handlers from "./handlers";
+const handlers: { [action: string]: MessageHandler | undefined } = _handlers;
+Object.freeze(handlers);
+
 const args = minimist(process.argv.slice(2));
 const port = args.port || 8080;
 const host = args.host || "127.0.0.1";
@@ -20,32 +24,41 @@ server.on("connection", ws => {
         const decoded = message.toString();
         console.log(`Received message: ${decoded}`);
 
-        const data = JSON.parse(decoded);
+        const data = JSON.parse(decoded) as MessageData;
 
-        ws.send(JSON.stringify({
-            action: "push_ack",
-            payload: {
-                x: data.payload.x,
-                y: data.payload.y,
+        // find the handler for the action
+        const handler = handlers[data.action];
+        if (handler) {
+            try {
+                // call the handler with the payload
+                handler(ws, data.payload);
+            } catch (error) {
+                console.error(`Error handling action "${data.action}":`, error);
+
+                ws.send(JSON.stringify({
+                    action: "error",
+                    payload: {
+                        for: data
+                    }
+                }));
             }
-        }));
+        } else {
+            console.warn(`No handler for action "${data.action}"`);
+
+            ws.send(JSON.stringify({
+                action: "invalid",
+                payload: {
+                    for: data
+                }
+            }));
+        }
     });
 
-    // send initial config
-    // TODO: send as single message and have the client parse it
+    // welcome message
     ws.send(JSON.stringify({
         action: "hello",
         payload: {
             motd: "Served fresh!"
-        }
-    }));
-
-    ws.send(JSON.stringify({
-        action: "set_text",
-        payload: {
-            x: 0,
-            y: 0,
-            text: "Hello, world!"
         }
     }));
 });
