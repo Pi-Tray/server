@@ -11,7 +11,7 @@ this readme needs to be done properly, but this isnt in working order yet so com
 
 1. Clone the repository:
    ```bash
-    git clone https://github.com/obfuscatedgenerated/pi-tray-server.git
+    git clone https://github.com/Pi-Tray/server.git pi-tray-server
     cd pi-tray-server
     ```
 2. Install dependencies:
@@ -26,5 +26,5 @@ this readme needs to be done properly, but this isnt in working order yet so com
    npm run start -- -- --host=<host-ip> --port=<port>
    ``` 
    You'll probably want to run this at startup, but that depends on your OS.
-7. You can now configure and subsequently build the [Pi-Tray client](https://github.com/obfuscatedgenerated/pi-tray) to connect to this server by setting the `VITE_WS_URL` environment variable in the client. This should be the URL of the server you just started, i.e., `ws://<host-ip>:<port>`.
+7. You can now configure and subsequently build the [Pi-Tray client](https://github.com/Pi-Tray/client) to connect to this server by setting the `VITE_WS_URL` environment variable in the client. This should be the URL of the server you just started, i.e., `ws://<host-ip>:<port>`.
 8. Ensure the Pi can actually access the server! If you're directly connected, you'll probably need to make an exception in your OS firewall to allow the Pi to send inbound traffic on the port you chose.
