@@ -1,3 +1,10 @@
+<center>
+    <h1>Pi-Tray Server</h1>
+    <img src="./icon.svg" />
+</center>
+
+---
+
 this readme needs to be done properly, but this isnt in working order yet so come back later :)
 
 ## Setup (make this better)
