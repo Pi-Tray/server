@@ -17,12 +17,35 @@ server.on("connection", ws => {
     console.log("Client connected");
 
     ws.on("message", message => {
-        // decode message as UTF-8 string
         const decoded = message.toString();
         console.log(`Received message: ${decoded}`);
 
-        ws.send(`Echo: ${decoded}`);
+        const data = JSON.parse(decoded);
+
+        ws.send(JSON.stringify({
+            action: "push_ack",
+            payload: {
+                x: data.payload.x,
+                y: data.payload.y,
+            }
+        }));
     });
 
-    ws.send("Welcome from server!");
+    // send initial config
+    // TODO: send as single message and have the client parse it
+    ws.send(JSON.stringify({
+        action: "hello",
+        payload: {
+            motd: "Served fresh!"
+        }
+    }));
+
+    ws.send(JSON.stringify({
+        action: "set_text",
+        payload: {
+            x: 0,
+            y: 0,
+            text: "Hello, world!"
+        }
+    }));
 });
