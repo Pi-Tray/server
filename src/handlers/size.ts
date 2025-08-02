@@ -1,11 +1,10 @@
+import {get_shape_of_loaded_rows} from "../data";
+
 export default ((ws, payload) => {
-    // just send dummy data for now
+    const shape = get_shape_of_loaded_rows();
 
     ws.send(JSON.stringify({
         action: "size",
-        payload: {
-            cols: 8,
-            rows: 4
-        }
+        payload: shape
     }));
 }) as MessageHandler;

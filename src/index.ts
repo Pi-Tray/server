@@ -1,9 +1,17 @@
 import WebSocket from "ws";
 import minimist from "minimist";
 
+import "./data";
+import * as data from "./data";
+
+import {register_notifiers} from "./notifiers";
+
 import * as _handlers from "./handlers";
 const handlers: { [action: string]: MessageHandler | undefined } = _handlers;
 Object.freeze(handlers);
+
+// TODO: set host and port from data dir
+// TODO: pass custom data directory as argument
 
 const args = minimist(process.argv.slice(2));
 const port = args.port || 8080;
@@ -19,6 +27,7 @@ const server = new WebSocket.Server({ port, host });
 
 server.on("connection", ws => {
     console.log("Client connected");
+    register_notifiers(ws);
 
     ws.on("message", message => {
         const decoded = message.toString();
