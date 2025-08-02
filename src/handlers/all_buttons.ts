@@ -11,6 +11,16 @@ export default ((ws, payload) => {
         }
     }));
 
+    ws.send(JSON.stringify({
+        action: "set_text",
+        payload: {
+            x: 7,
+            y: 3,
+            text: "database-zap",
+            is_icon: true
+        }
+    }));
+
     setTimeout(() => {
         ws.send(JSON.stringify({
             action: "set_text",
@@ -21,4 +31,25 @@ export default ((ws, payload) => {
             }
         }));
     }, 1000);
+
+    setTimeout(() => {
+        ws.send(JSON.stringify({
+            action: "set_text",
+            payload: {
+                x: 0,
+                y: 0,
+                text: "Hi"
+            }
+        }));
+
+        ws.send(JSON.stringify({
+            action: "set_text",
+            payload: {
+                x: 7,
+                y: 3,
+                text: "veryinvalidicon",
+                is_icon: true
+            }
+        }));
+    }, 3000);
 }) as MessageHandler;
