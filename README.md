@@ -7,6 +7,10 @@
 
 this readme needs to be done properly, but this isnt in working order yet so come back later :)
 
+## Installing plugins
+
+`npm install <plugin repo> --no-save`
+
 ## Setup (make this better)
 
 1. Clone the repository:
