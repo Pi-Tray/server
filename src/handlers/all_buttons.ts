@@ -15,8 +15,8 @@ export default ((ws, payload) => {
                 ws.send(JSON.stringify({
                     action: "set_text",
                     payload: {
-                        x: col_idx,
-                        y: row_idx,
+                        x: parseInt(col_idx, 10),
+                        y: parseInt(row_idx, 10),
                         text: cell.text,
                         is_icon: cell.text_is_icon
                     }
