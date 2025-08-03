@@ -1,7 +1,7 @@
 import {get_loaded_grid} from "../data";
 import {load_plugin} from "../plugins";
 
-export default ((ws, payload) => {
+export default (async (ws, payload) => {
     const grid = get_loaded_grid();
 
     const cell = grid[payload.y]?.[payload.x];
@@ -25,7 +25,7 @@ export default ((ws, payload) => {
         const plugin_config = typeof cell.plugin === "string" ? undefined : cell.plugin.config;
 
         const plugin = load_plugin(plugin_name);
-        plugin.handle_push({
+        await plugin.handle_push({
             x: payload.x,
             y: payload.y,
             config: plugin_config,

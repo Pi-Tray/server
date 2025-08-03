@@ -29,7 +29,7 @@ server.on("connection", ws => {
     console.log("Client connected");
     register_notifiers(ws);
 
-    ws.on("message", message => {
+    ws.on("message", async (message) => {
         const decoded = message.toString();
         console.log(`Received message: ${decoded}`);
 
@@ -40,7 +40,7 @@ server.on("connection", ws => {
         if (handler) {
             try {
                 // call the handler with the payload
-                handler(ws, data.payload);
+                await handler(ws, data.payload);
             } catch (error) {
                 console.error(`Error handling action "${data.action}":`, error);
 

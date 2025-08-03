@@ -23,7 +23,7 @@ declare global {
      * Then it should be added as an export in `src/handlers/index.ts`.<br>
      * The name of the export should match the action it handles.
      */
-    type MessageHandler = (ws: WebSocket, data: MessagePayload) => void;
+    type MessageHandler = (ws: WebSocket, data: MessagePayload) => Promise<void>;
 
     interface PluginConfigReference {
         /**
