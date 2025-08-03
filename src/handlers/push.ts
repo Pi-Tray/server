@@ -38,7 +38,7 @@ export default (async (ws, payload) => {
 
     // ack the push action
     ws.send(JSON.stringify({
-        action: "push_ack",
+        action: "push_ok",
         payload: {
             x: payload.x,
             y: payload.y,
