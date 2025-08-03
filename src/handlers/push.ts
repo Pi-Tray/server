@@ -6,17 +6,7 @@ export default (async (ws, payload) => {
 
     const cell = grid[payload.y]?.[payload.x];
     if (!cell || !cell.plugin) {
-        // nothing to run if the cell is empty or has no plugin
-
-        // ack the push action
-        ws.send(JSON.stringify({
-            action: "push_ack",
-            payload: {
-                x: payload.x,
-                y: payload.y,
-            }
-        }));
-
+        // nothing to do if the cell is empty or has no plugin
         return;
     }
 
