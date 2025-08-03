@@ -21,6 +21,10 @@ if (host === "127.0.0.1" || host === "localhost") {
     console.warn("Warning: Using localhost. Server will not be accessible from other devices on network. You should specify a --host= argument to choose an interface to host on.");
 }
 
+if (host === "0.0.0.0") {
+    console.warn("Warning: Using 0.0.0.0. Server will be hosted on all interfaces! Be careful with this, as it will allow anyone on the network to connect to your server. Do NOT forward the assigned port.");
+}
+
 console.log(`Starting WebSocket server on ws://${host}:${port}`);
 
 const server = new WebSocket.Server({ port, host });
