@@ -18,7 +18,7 @@ export const in_data_dir = (in_path: string): string => {
 
 fs.mkdirSync(data_dir, {recursive: true});
 
-const grid_file_path = path.join(data_dir, "grid.json");
+const grid_file_path = in_data_dir("grid.json");
 
 export interface GridShape {
     /**
