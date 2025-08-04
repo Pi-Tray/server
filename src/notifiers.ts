@@ -25,6 +25,8 @@ export const register_notifiers = (ws: WebSocket) => {
             // TODO: determine if text changed or just plugin (which we dont send)
             console.log(`Notifying client of cell change at ${change.row_idx},${change.col_idx}`);
 
+            // TODO: randomly breaking, grid state is not consistent when cell change occurs
+
             const cell = grid[change.row_idx]?.[change.col_idx];
             if (!cell) {
                 // cell has become an empty cell, send empty text
