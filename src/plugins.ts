@@ -8,7 +8,7 @@ const require_from_plugin_env = createRequire(path.resolve(__dirname, "../plugin
 
 /**
  * Loads a plugin module dynamically and validates its structure.<br>
- * The module must export a `handle_push` function, and optionally a `display_name` string.
+ * The module must export a plugin object as its default export with a `handle_push` function, and optionally a `display_name` string.
  * @param name the module name to load
  * @return the loaded plugin object
  */
@@ -21,7 +21,13 @@ export const load_plugin = (name: string) => {
         delete require_from_plugin_env.cache[require_from_plugin_env.resolve(name)];
     }
 
-    const plugin = require_from_plugin_env(name);
+    const module = require_from_plugin_env(name);
+
+    if (!module || typeof module !== "object" || !module.default) {
+        throw new Error(`Plugin ${name} does not export a valid plugin object as default.`);
+    }
+
+    const plugin = module.default;
 
     if (typeof plugin.handle_push !== "function") {
         throw new Error(`Plugin ${name} does not export a handle_push function.`);
