@@ -7,6 +7,8 @@
 
 this readme needs to be done properly, but this isnt in working order yet so come back later :)
 
+once the editor program gets up and running, its going to manage a bit of this for you, especially plugin-env
+
 ## Setup (make this better)
 
 1. Clone the repository:
