@@ -11,13 +11,13 @@
   "author": "obfuscatedgenerated",
   "license": "MIT",
   "dependencies": {
+    "@types/ws": "^8.18.1",
     "@pi-tray/builtin": "github:Pi-Tray/builtin-plugins",
     "minimist": "^1.2.8",
     "ws": "^8.18.3"
   },
   "devDependencies": {
     "@types/minimist": "^1.2.5",
-    "@types/ws": "^8.18.1",
     "tsx": "^4.20.3",
     "typescript": "^5.9.2"
   }
