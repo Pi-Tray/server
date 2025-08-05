@@ -1,5 +1,0 @@
-{
-  "dependencies": {
-    "@pi-tray/builtin": "github:Pi-Tray/builtin-plugins"
-  }
-}
