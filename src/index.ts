@@ -1,8 +1,10 @@
 import WebSocket from "ws";
 import minimist from "minimist";
 
+import type { MessageData, MessageHandler } from "./types";
+
+// ensure data init scripts run
 import "./data";
-import * as data from "./data";
 
 import {register_notifiers} from "./notifiers";
 

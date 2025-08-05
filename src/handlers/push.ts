@@ -1,3 +1,5 @@
+import type {MessageHandler} from "../types";
+
 import {get_loaded_grid} from "../data";
 import {load_plugin} from "../plugins";
 
