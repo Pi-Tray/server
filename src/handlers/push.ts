@@ -10,8 +10,9 @@ export default (async (ws, payload) => {
         return;
     }
 
+    const plugin_name = typeof cell.plugin === "string" ? cell.plugin : cell.plugin.name;
+
     try {
-        const plugin_name = typeof cell.plugin === "string" ? cell.plugin : cell.plugin.name;
         const plugin_config = typeof cell.plugin === "string" ? undefined : cell.plugin.config;
 
         const plugin = load_plugin(plugin_name);
@@ -22,7 +23,7 @@ export default (async (ws, payload) => {
             ws: ws
         });
     } catch (error) {
-        console.error(`Error handling push for plugin ${cell.plugin}:`, error);
+        console.error(`Error handling push for plugin ${plugin_name}:`, error);
 
         // send an error message back to the client
         ws.send(JSON.stringify({
