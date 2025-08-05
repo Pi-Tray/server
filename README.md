@@ -9,7 +9,10 @@ this readme needs to be done properly, but this isnt in working order yet so com
 
 ## Installing plugins
 
-`npm install <plugin repo> --no-save`
+```bash
+cd plugin-env
+npm install <plugin repo url>
+```
 
 ## Setup (make this better)
 

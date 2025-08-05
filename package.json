@@ -12,7 +12,6 @@
   "license": "MIT",
   "dependencies": {
     "@types/ws": "^8.18.1",
-    "@pi-tray/builtin": "github:Pi-Tray/builtin-plugins",
     "minimist": "^1.2.8",
     "ws": "^8.18.3"
   },
