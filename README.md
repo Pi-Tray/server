@@ -22,7 +22,7 @@ once the editor program gets up and running, its going to manage a bit of this f
    ```
 3. Generate `plugin-env`:
    ```bash
-   npm run setup
+   npm run plugin:setup
    ```
 4. Decide on a port you want the server to run on. By default this is 8080.
 5. Create a connection between the Pi and the computer the server runs on. For me, I connect the Pi directly over Ethernet and assign it a static IP. (I should really do a writeup about this)
