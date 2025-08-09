@@ -4,7 +4,7 @@ import minimist from "minimist";
 import type { MessageData, MessageHandler } from "./types";
 
 // ensure data init scripts run
-import "./data";
+import {write_ws_url_for_editor} from "./data";
 
 import {register_notifiers} from "./notifiers";
 
@@ -76,4 +76,15 @@ server.on("connection", ws => {
             motd: "Served fresh!"
         }
     }));
+});
+
+server.on("listening", () => {
+    console.log(`WebSocket server is listening on ws://${host}:${port}`);
+
+    let effective_host = host;
+    if (effective_host === "0.0.0.0") {
+        effective_host = "localhost";
+    }
+
+    write_ws_url_for_editor(effective_host, port);
 });
