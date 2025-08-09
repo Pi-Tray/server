@@ -41,16 +41,16 @@ You can use the `npm run plugin:npm` command in the server's root to run npm in 
 
 For example, you can install a plugin with your package manager following its README, e.g.
 ```bash
-   npm run plugin:npm install https://github.com/Pi-Tray/ghost-plugins#release
-  ```
+npm run plugin:npm install https://github.com/Pi-Tray/ghost-plugins#release
+ ```
 
 Alternatively, follow the next section to change directly into the `plugin-env` directory and run npm commands normally there.
 
 ## Changing into the `plugin-env`:
 
 Bash / PowerShell:
-   ```bash
-   cd "$(npm run where:plugin-env --silent)"
-   ```
+```bash
+cd "$(npm run where:plugin-env --silent)"
+```
 
 Manual: copy the output of `npm run where:plugin-env --silent` and `cd` into that directory.
