@@ -37,7 +37,16 @@ once the editor program gets up and running, its going to manage a bit of this f
 
 ## Installing plugins
 
-```bash
-cd plugin-env
-npm install <plugin repo url>
-```
+1. Change into the `plugin-env`:
+
+   Bash / PowerShell:
+   ```bash
+   cd "$(npm run where:plugin-env --silent)"
+   ```
+   
+   Manual: copy the output of `npm run where:plugin-env --silent` and `cd` into that directory.
+
+2. Install the plugin with your package manager following its README, e.g.
+    ```bash
+    npm install https://github.com/Pi-Tray/ghost-plugins#release
+    ```
