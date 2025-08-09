@@ -20,6 +20,12 @@ export const in_data_dir = (in_path: string): string => {
 
 fs.mkdirSync(data_dir, {recursive: true});
 
+export const plugin_env = in_data_dir("plugin-env");
+export const in_plugin_env = (in_path: string): string => {
+    return path.join(plugin_env, in_path);
+}
+
+
 const grid_file_path = in_data_dir("grid.json");
 
 export interface GridShape {

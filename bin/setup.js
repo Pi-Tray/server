@@ -2,13 +2,31 @@ const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
 
-const repo_root = path.resolve(__dirname, "..");
-const plugin_env_path = path.join(repo_root, "plugin-env");
+// thanks https://stackoverflow.com/a/26227660/19678893
+const appdata_root = process.env.APPDATA || (process.platform === "darwin" ? process.env.HOME + "/Library/Application Support" : process.env.HOME + "/.config");
 
-const package_json_path = path.join(plugin_env_path, "package.json");
-const readme_path = path.join(plugin_env_path, "README.txt");
+// returns the path relative to the appdata root directory
+const appdata = (in_path) => {
+    return path.join(appdata_root, in_path);
+}
+
+const data_dir = appdata("pi-tray");
+const in_data_dir = (in_path) => {
+    return path.join(data_dir, in_path);
+}
+
+
+const plugin_env = in_data_dir("plugin-env");
+const in_plugin_env = (in_path) => {
+    return path.join(plugin_env, in_path);
+}
+
+const package_json_path = in_plugin_env("package.json");
+const readme_path = in_plugin_env("README.txt");
 
 const builtin_package = "https://github.com/Pi-Tray/builtin-plugins.git";
+
+// TODO: ask user if they want to install additional plugins
 
 const readme_content = `plugin-env
 =============
@@ -23,17 +41,19 @@ next run npm install.
 `;
 
 try {
-    if (!fs.existsSync(plugin_env_path)) {
-        fs.mkdirSync(plugin_env_path);
-        console.log("Created plugin-env directory");
+    if (!fs.existsSync(plugin_env)) {
+        fs.mkdirSync(plugin_env, { recursive: true });
+        console.log("Created plugin-env directory:", plugin_env);
     }
 
     // write dummy package.json to tell npm this is a subpackage
+    // TODO: ensure package.json isnt overwritten if it already exists and is valid
     fs.writeFileSync(package_json_path, "{}", "utf8");
     console.log("Wrote package.json to plugin-env");
 
     // install builtin plugins
-    execSync(`npm install ${builtin_package}`, { cwd: plugin_env_path, stdio: "inherit" });
+    // TODO: offer to use yarn / pnpm? would need to ensure any code to read plugins is also compatible with those managers
+    execSync(`npm install ${builtin_package}`, { cwd: plugin_env, stdio: "inherit" });
     console.log("Installed builtin plugins");
 
     // write readme

@@ -1,10 +1,10 @@
 import type { Plugin } from "./types";
 
-import path from "path";
-import { createRequire } from "module";
+import {createRequire} from "module";
+import {in_plugin_env} from "./data";
 
 // create a custom require resolver that looks at the node_modules of the plugin-env directory
-const require_from_plugin_env = createRequire(path.resolve(__dirname, "../plugin-env/package.json"));
+const require_from_plugin_env = createRequire(in_plugin_env("package.json"));
 
 /**
  * Loads a plugin module dynamically and validates its structure.<br>
