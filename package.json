@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsx src/index.ts",
     "build": "tsc",
-    "setup": "node bin/setup.js",
+    "plugin:setup": "node bin/plugin_setup.js",
+    "plugin:npm": "node bin/plugin_npm.js",
     "where:appdata": "node bin/where_appdata.js",
     "where:pi-tray": "node bin/where_appdata.js pi-tray",
     "where:plugin-env": "node bin/where_appdata.js pi-tray/plugin-env"

@@ -37,16 +37,20 @@ once the editor program gets up and running, its going to manage a bit of this f
 
 ## Installing plugins
 
-1. Change into the `plugin-env`:
+You can use the `npm run plugin:npm` command in the server's root to run npm in the `plugin-env` directory.
 
-   Bash / PowerShell:
+For example, you can install a plugin with your package manager following its README, e.g.
+```bash
+   npm run plugin:npm install https://github.com/Pi-Tray/ghost-plugins#release
+  ```
+
+Alternatively, follow the next section to change directly into the `plugin-env` directory and run npm commands normally there.
+
+## Changing into the `plugin-env`:
+
+Bash / PowerShell:
    ```bash
    cd "$(npm run where:plugin-env --silent)"
    ```
-   
-   Manual: copy the output of `npm run where:plugin-env --silent` and `cd` into that directory.
 
-2. Install the plugin with your package manager following its README, e.g.
-    ```bash
-    npm install https://github.com/Pi-Tray/ghost-plugins#release
-    ```
+Manual: copy the output of `npm run where:plugin-env --silent` and `cd` into that directory.
