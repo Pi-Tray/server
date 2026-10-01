@@ -113,6 +113,18 @@ export const add_grid_change_listener = (listener: GridChangeListener) => {
     grid_changed_listener.push(listener);
 }
 
+/**
+ * Removes a listener previously added with {@link add_grid_change_listener}.
+ * @param listener a reference equivalent to the listener passed to `add_grid_change_listener`
+ */
+export const remove_grid_change_listener = (listener: GridChangeListener) => {
+    const listener_idx = grid_changed_listener.indexOf(listener);
+
+    if (listener_idx !== -1) {
+        grid_changed_listener.splice(listener_idx, 1);
+    }
+}
+
 // load initial grid
 reload_grid();
 

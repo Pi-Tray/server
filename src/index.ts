@@ -36,9 +36,13 @@ server.on("connection", ws => {
     console.log("Client connected");
 
     connected_clients.add(ws);
-    ws.on("close", () => connected_clients.delete(ws));
 
-    register_notifiers(ws);
+    const unregister_notifiers = register_notifiers(ws);
+
+    ws.on("close", () => {
+        connected_clients.delete(ws);
+        unregister_notifiers();
+    });
 
     ws.on("message", async (message) => {
         const decoded = message.toString();

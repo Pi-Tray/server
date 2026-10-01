@@ -1,6 +1,9 @@
 import type { WebSocket } from "ws";
 
-import {add_grid_change_listener, get_loaded_grid, get_shape_of_loaded_grid, GridChangeListener} from "./data";
+import {
+    add_grid_change_listener, get_loaded_grid, get_shape_of_loaded_grid, GridChangeListener,
+    remove_grid_change_listener
+} from "./data";
 
 export const register_notifiers = (ws: WebSocket) => {
     const shape_changed = async () => {
@@ -24,8 +27,6 @@ export const register_notifiers = (ws: WebSocket) => {
 
             // TODO: determine if text changed or just plugin (which we dont send)
             console.log(`Notifying client of cell change at ${change.row_idx},${change.col_idx}`);
-
-            // TODO: randomly breaking, grid state is not consistent when cell change occurs
 
             const cell = grid[change.row_idx]?.[change.col_idx];
             if (!cell) {
@@ -56,4 +57,5 @@ export const register_notifiers = (ws: WebSocket) => {
     }
 
     add_grid_change_listener(grid_changed);
+    return () => remove_grid_change_listener(grid_changed);
 }
