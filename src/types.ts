@@ -89,7 +89,10 @@ type PluginConfigTemplate_FieldType = PluginConfigTemplate_PrimitiveFieldType | 
 
 type PluginConfigTemplate_BaseField = {
     type: PluginConfigTemplate_FieldType | PluginConfigTemplate_FieldType[];
+
+    // Supports a small markdown subset: links, bold, italic and inline code.
     description?: string;
+
     optional?: true;
 };
 
@@ -152,10 +155,19 @@ export type PluginConfigTemplate = {
 
 export interface Plugin {
     /**
-     * The display name of the plugin to show in editors.<br>
+     * Short label for what the plugin does, shown wherever a plugin is listed or selected.<br>
+     * Write it as an action in a few words, e.g. "Open a path" or "Run a command".<br>
      * You should specify this, but otherwise it will default to the name of the module.
      */
     display_name?: string;
+
+    /**
+     * Optional detail that doesn't fit in the display name, shown under it in the plugin picker.<br>
+     * Use it for how the plugin behaves, what it needs, and any caveats, rather than repeating the display name.<br>
+     * e.g. "Requires Voicemeeter to be running. The sound plays on the first virtual input."<br>
+     * Supports a small markdown subset: links, bold, italic and inline code.
+     */
+    description?: string;
 
     /**
      * The configuration template for the plugin, if any.<br>
