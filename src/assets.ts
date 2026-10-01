@@ -20,6 +20,76 @@ const CONTENT_TYPES: Record<string, string> = {
 // a lowercase uuid with an allowed image extension, so nothing else in the data dir can ever be requested
 const ASSET_PATH_PATTERN = /^\/assets\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\.(png|jpe?g|webp|gif|svg)$/;
 
+// just the id part, for validating ids that come from grid.json before touching the filesystem
+const ASSET_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+
+// matches asset image files in the folder, capturing the id
+const ASSET_FILE_PATTERN = /^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\.(png|jpe?g|webp|gif|svg)$/;
+
+/**
+ * Turns an asset id into the url clients should load it from, e.g. `/assets/<id>.png?v=<mtime>`.<br>
+ * The url is relative, clients resolve it against the address they connected to.
+ * @param asset_id the asset's id, typically from a cell in grid.json
+ * @returns the url, or null if there's no such asset
+ */
+export const resolve_asset_url = (asset_id: string | undefined): string | null => {
+    if (!asset_id || !ASSET_ID_PATTERN.test(asset_id)) {
+        return null;
+    }
+
+    let newest: { file_name: string, version: number } | null = null;
+
+    // newest file wins if a replace has briefly left two images for one id
+    for (const file_name of fs.readdirSync(assets_dir)) {
+        if (!file_name.startsWith(`${asset_id}.`) || !ASSET_FILE_PATTERN.test(file_name)) {
+            continue;
+        }
+
+        const version = Math.floor(fs.statSync(path.join(assets_dir, file_name)).mtimeMs);
+        if (!newest || version > newest.version) {
+            newest = {file_name, version};
+        }
+    }
+
+    return newest ? `/assets/${newest.file_name}?v=${newest.version}` : null;
+}
+
+export type AssetChangeListener = (asset_id: string) => void;
+
+const asset_change_listeners = new Set<AssetChangeListener>();
+
+/**
+ * Calls the listener with an asset's id whenever its image is added, replaced or deleted.
+ * @param listener the listener to add
+ * @returns a function that removes the listener
+ */
+export const add_asset_change_listener = (listener: AssetChangeListener): (() => void) => {
+    asset_change_listeners.add(listener);
+    return () => {
+        asset_change_listeners.delete(listener);
+    };
+}
+
+// a single write fires several watch events, so changes to each asset are batched briefly
+const pending_asset_changes = new Map<string, NodeJS.Timeout>();
+
+fs.watch(assets_dir, (_event_type, file_name) => {
+    const file_match = file_name ? String(file_name).match(ASSET_FILE_PATTERN) : null;
+    if (!file_match) {
+        // the name sidecars don't affect what clients see
+        return;
+    }
+
+    const asset_id = file_match[1];
+
+    clearTimeout(pending_asset_changes.get(asset_id));
+    pending_asset_changes.set(asset_id, setTimeout(() => {
+        pending_asset_changes.delete(asset_id);
+        console.log(`Asset ${asset_id} changed, notifying listeners`);
+        asset_change_listeners.forEach(listener => listener(asset_id));
+    }, 250));
+});
+
 const send_status = (response: ServerResponse, status_code: number, headers: Record<string, string> = {}) => {
     response.writeHead(status_code, headers);
     response.end();

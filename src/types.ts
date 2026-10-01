@@ -48,12 +48,15 @@ export type PluginReference = string | PluginConfigReference;
  * @param text the text to display in the cell (default: empty string)
  * @param text_is_icon whether the text should be treated as a Lucide icon name (default: false)
  * @param plugin the name of the plugin that runs when the cell is clicked, or a configuration object for the plugin (default: no plugin)
+ * @param background relative asset URL for the background image to use for the cell (default: no background)
  */
 export interface CellData {
     text?: string;
     text_is_icon?: boolean;
 
     plugin?: PluginReference;
+
+    background?: string;
 }
 
 
