@@ -9,6 +9,7 @@ import {write_ws_url_for_editor} from "./data";
 import {register_notifiers} from "./notifiers";
 
 import * as _handlers from "./handlers";
+import {connected_clients} from "./clients";
 const handlers: { [action: string]: MessageHandler | undefined } = _handlers;
 Object.freeze(handlers);
 
@@ -33,6 +34,10 @@ const server = new WebSocket.Server({ port, host });
 
 server.on("connection", ws => {
     console.log("Client connected");
+
+    connected_clients.add(ws);
+    ws.on("close", () => connected_clients.delete(ws));
+
     register_notifiers(ws);
 
     ws.on("message", async (message) => {
