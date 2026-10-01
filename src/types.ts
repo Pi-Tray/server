@@ -2,7 +2,7 @@ import type WebSocket from "ws";
 
 /**
  * The action to perform in a WebSocket message.<br>
- * E.g. "hello", "set_text", "push", etc.
+ * E.g. "hello", "set_cell", "push", etc.
  */
 export type MessageAction = string;
 

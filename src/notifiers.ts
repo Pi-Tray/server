@@ -9,7 +9,7 @@ export const register_notifiers = (ws: WebSocket): (() => void) => {
         const cell = get_loaded_grid()[row_idx]?.[col_idx];
 
         ws.send(JSON.stringify({
-            action: "set_text",
+            action: "set_cell",
             payload: build_cell_payload(col_idx, row_idx, cell)
         }));
     }
