@@ -1,5 +1,6 @@
 import WebSocket from "ws";
 import minimist from "minimist";
+import {createServer} from "http";
 
 import type { MessageData, MessageHandler } from "./types";
 
@@ -10,6 +11,7 @@ import {register_notifiers} from "./notifiers";
 
 import * as _handlers from "./handlers";
 import {connected_clients} from "./clients";
+import {handle_asset_request} from "./assets";
 const handlers: { [action: string]: MessageHandler | undefined } = _handlers;
 Object.freeze(handlers);
 
@@ -30,9 +32,11 @@ if (host === "0.0.0.0") {
 
 console.log(`Starting WebSocket server on ws://${host}:${port}`);
 
-const server = new WebSocket.Server({ port, host });
+// assets are served over plain http on the same port, so the websocket only has to carry references to them
+const http_server = createServer(handle_asset_request);
+const ws_server = new WebSocket.Server({ server: http_server });
 
-server.on("connection", ws => {
+ws_server.on("connection", ws => {
     console.log("Client connected");
 
     connected_clients.add(ws);
@@ -87,8 +91,8 @@ server.on("connection", ws => {
     }));
 });
 
-server.on("listening", () => {
-    console.log(`WebSocket server is listening on ws://${host}:${port}`);
+http_server.on("listening", () => {
+    console.log(`Server is listening on ws://${host}:${port}`);
 
     let effective_host = host;
     if (effective_host === "0.0.0.0") {
@@ -97,3 +101,5 @@ server.on("listening", () => {
 
     write_ws_url_for_editor(effective_host, port);
 });
+
+http_server.listen(port, host);
