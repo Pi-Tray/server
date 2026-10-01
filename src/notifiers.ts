@@ -39,6 +39,7 @@ export const register_notifiers = (ws: WebSocket) => {
                         is_icon: false
                     }
                 }));
+                continue;
             }
 
             // send the updated cell to the client
