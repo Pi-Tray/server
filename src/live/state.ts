@@ -1,9 +1,9 @@
-import type {CellData, PluginLiveControllable} from "../types";
+import type {CellData, PluginLiveControllable, PluginLiveControlledField} from "../types";
 
 /**
  * The values live plugins have set for a cell, overlaid on top of the cell's data from grid.json.
  */
-export type LiveCellState = Partial<Pick<CellData, PluginLiveControllable>>;
+export type LiveCellState = Partial<Pick<CellData, PluginLiveControlledField<PluginLiveControllable>>>;
 
 export type LiveStateListener = (row_idx: number, col_idx: number) => void;
 

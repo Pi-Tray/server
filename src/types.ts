@@ -155,14 +155,25 @@ export type PluginConfigTemplate = {
 
 export type PluginConfig = { [key: string]: any };
 
-export const PLUGIN_LIVE_CONTROLLABLE = ["text", "text_is_icon", "background"] as const satisfies readonly Exclude<keyof CellData, "plugin">[];
+/**
+ * What each live control lets a plugin set. label covers text and text_is_icon together,
+ * as text_is_icon decides what text means.
+ */
+export const PLUGIN_LIVE_CONTROL_FIELDS = {
+    label: ["text", "text_is_icon"],
+    background: ["background"],
+} as const satisfies Record<string, readonly Exclude<keyof CellData, "plugin">[]>;
 
-export type PluginLiveControllable = typeof PLUGIN_LIVE_CONTROLLABLE[number];
+export const PLUGIN_LIVE_CONTROLLABLE = Object.keys(PLUGIN_LIVE_CONTROL_FIELDS) as (keyof typeof PLUGIN_LIVE_CONTROL_FIELDS)[];
+
+export type PluginLiveControllable = keyof typeof PLUGIN_LIVE_CONTROL_FIELDS;
 
 /**
- * An update from a live plugin, limited to the fields it declared in `controls`.
+ * The cell fields a set of controls covers, e.g. "label" covers text and text_is_icon.
  */
-export type PluginLiveState<Controls extends PluginLiveControllable> = Partial<Pick<CellData, Controls>>;
+export type PluginLiveControlledField<Controls extends PluginLiveControllable> = typeof PLUGIN_LIVE_CONTROL_FIELDS[Controls][number];
+
+export type PluginLiveState<Controls extends PluginLiveControllable> = Partial<Pick<CellData, PluginLiveControlledField<Controls>>>;
 
 export interface PluginLiveContext<Controls extends PluginLiveControllable> {
     config: PluginConfig;

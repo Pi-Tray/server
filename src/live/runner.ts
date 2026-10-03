@@ -1,6 +1,6 @@
 import {AsyncLocalStorage} from "async_hooks";
 
-import type {Plugin, PluginConfig} from "../types";
+import type {Plugin, PluginConfig, PLUGIN_LIVE_CONTROL_FIELDS} from "../types";
 
 import {add_grid_change_listener, get_loaded_grid} from "../data";
 import {add_plugin_cache_clear_listener, load_plugin} from "../plugins";
@@ -189,15 +189,18 @@ const start_tile = (key: string, desired: DesiredTile) => {
         col_idx: desired.col_idx,
         controller,
         key: desired.key,
-        pending_state: null,
+        // a plugin controlling the label shows its text as text unless it says otherwise, whatever the stored
+        // cell was set to. held back until the plugin's first update, so the stored label shows until then
+        pending_state: live.controls.includes("label") ? {text_is_icon: false} : null,
         flush_timer: null,
         last_flush_at: 0
     };
 
     running_tiles.set(key, tile);
 
-    // only fields the plugin declared, as plain js plugins aren't checked by the types
-    const controls = new Set<string>(live.controls);
+    // the cell fields the plugin's controls cover, e.g. label covers text and text_is_icon.
+    // only these are accepted, as plain js plugins aren't checked by the types
+    const allowed_fields = new Set<string>(live.controls.flatMap(control => PLUGIN_LIVE_CONTROL_FIELDS[control] ?? []));
 
     const warned_fields = new Set<string>();
 
@@ -210,12 +213,12 @@ const start_tile = (key: string, desired: DesiredTile) => {
         const allowed_state: Record<string, unknown> = {};
 
         for (const [field, value] of Object.entries(state)) {
-            if (controls.has(field)) {
+            if (allowed_fields.has(field)) {
                 allowed_state[field] = value;
             } else if (!warned_fields.has(field)) {
                 // once per field per tile, so a plugin updating every second doesn't flood the log
                 warned_fields.add(field);
-                console.warn(`Live tile ${key} tried to set "${field}", which isn't in its controls (${[...controls].join(", ")}), so it was ignored`);
+                console.warn(`Live tile ${key} tried to set "${field}", which its controls (${live.controls.join(", ")}) don't cover, so it was ignored`);
             }
         }
 
