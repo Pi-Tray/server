@@ -153,7 +153,40 @@ export type PluginConfigTemplate = {
     [key: string]: PluginConfigTemplate_Field;
 };
 
-export interface Plugin {
+export type PluginConfig = { [key: string]: any };
+
+export const PLUGIN_LIVE_CONTROLLABLE = ["text", "text_is_icon", "background"] as const satisfies readonly Exclude<keyof CellData, "plugin">[];
+
+export type PluginLiveControllable = typeof PLUGIN_LIVE_CONTROLLABLE[number];
+
+/**
+ * An update from a live plugin, limited to the fields it declared in `controls`.
+ */
+export type PluginLiveState<Controls extends PluginLiveControllable> = Partial<Pick<CellData, Controls>>;
+
+export interface PluginLiveContext<Controls extends PluginLiveControllable> {
+    config: PluginConfig;
+    update: (state: PluginLiveState<Controls>) => void;
+
+    /**
+     * Aborted when the tile stops, e.g. its cell or config changed or the plugin was reloaded.
+     */
+    signal: AbortSignal;
+}
+
+export interface PluginLiveConfig<Controls extends PluginLiveControllable = PluginLiveControllable> {
+    /**
+     * The cell fields this plugin sets. Editors grey these out, and update() only accepts these.
+     */
+    controls: readonly Controls[];
+
+    /**
+     * Called by the server when the tile should start. Return a cleanup function, or use context.signal.
+     */
+    init(context: PluginLiveContext<Controls>): void | (() => void);
+}
+
+export interface Plugin<Controls extends PluginLiveControllable = PluginLiveControllable> {
     /**
      * Short label for what the plugin does, shown wherever a plugin is listed or selected.<br>
      * Write it as an action in a few words, e.g. "Open a path" or "Run a command".<br>
@@ -178,5 +211,15 @@ export interface Plugin {
     /**
      * The function that is fired when a button using this plugin is pushed.
      */
-    handle_push: PluginPushHandler;
+    handle_push?: PluginPushHandler;
+
+    /**
+     * Properties for live plugins.
+     */
+    live?: PluginLiveConfig<Controls>;
 }
+
+/**
+ * Identity function that lets TypeScript infer controls so update() only accepts those fields.
+ */
+export const define_plugin = <const Controls extends PluginLiveControllable = never>(plugin: Plugin<Controls>): Plugin<Controls> => plugin;

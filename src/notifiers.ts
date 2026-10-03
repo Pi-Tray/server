@@ -3,6 +3,7 @@ import type { WebSocket } from "ws";
 import {add_grid_change_listener, get_loaded_grid, get_shape_of_loaded_grid, GridChangeListener, remove_grid_change_listener} from "./data";
 import {add_asset_change_listener} from "./assets";
 import {build_cell_payload} from "./cell_payload";
+import {add_live_state_listener} from "./live/state";
 
 export const register_notifiers = (ws: WebSocket): (() => void) => {
     const send_cell = (col_idx: number, row_idx: number) => {
@@ -55,9 +56,12 @@ export const register_notifiers = (ws: WebSocket): (() => void) => {
     add_grid_change_listener(grid_changed);
     const remove_asset_listener = add_asset_change_listener(asset_changed);
 
+    const remove_live_listener = add_live_state_listener((row_idx, col_idx) => send_cell(col_idx, row_idx));
+
     // call when the socket closes, otherwise the listeners live forever and keep sending to a dead socket
     return () => {
         remove_grid_change_listener(grid_changed);
         remove_asset_listener();
+        remove_live_listener();
     };
 }

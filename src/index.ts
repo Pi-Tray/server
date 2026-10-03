@@ -12,6 +12,7 @@ import {register_notifiers} from "./notifiers";
 import * as _handlers from "./handlers";
 import {connected_clients} from "./clients";
 import {handle_asset_request} from "./assets";
+import {live_client_connected, live_client_disconnected} from "./live/runner";
 const handlers: { [action: string]: MessageHandler | undefined } = _handlers;
 Object.freeze(handlers);
 
@@ -42,10 +43,12 @@ ws_server.on("connection", ws => {
     connected_clients.add(ws);
 
     const unregister_notifiers = register_notifiers(ws);
+    live_client_connected();
 
     ws.on("close", () => {
         connected_clients.delete(ws);
         unregister_notifiers();
+        live_client_disconnected();
     });
 
     ws.on("message", async (message) => {
