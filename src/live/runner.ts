@@ -1,6 +1,6 @@
 import {AsyncLocalStorage} from "async_hooks";
 
-import type {Plugin, PluginConfig, PLUGIN_LIVE_CONTROL_FIELDS} from "../types";
+import {Plugin, PluginConfig, PLUGIN_LIVE_CONTROL_FIELDS} from "../types";
 
 import {add_grid_change_listener, get_loaded_grid} from "../data";
 import {add_plugin_cache_clear_listener, load_plugin} from "../plugins";
