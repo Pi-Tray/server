@@ -1,3 +1,5 @@
+import "./logging";
+
 import WebSocket from "ws";
 import minimist from "minimist";
 import {createServer} from "http";

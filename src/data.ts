@@ -3,20 +3,8 @@ import fs from "fs";
 
 import type { CellData } from "./types";
 
-
-// thanks https://stackoverflow.com/a/26227660/19678893
-const appdata_root = process.env.APPDATA || (process.platform === "darwin" ? process.env.HOME + "/Library/Application Support" : process.env.HOME + "/.config");
-
-// returns the path relative to the appdata root directory
-const appdata = (in_path: string): string => {
-    return path.join(appdata_root, in_path);
-}
-
-
-export const data_dir = appdata("pi-tray");
-export const in_data_dir = (in_path: string): string => {
-    return path.join(data_dir, in_path);
-}
+import {data_dir, in_data_dir} from "./paths";
+export {data_dir, in_data_dir};
 
 fs.mkdirSync(data_dir, {recursive: true});
 
