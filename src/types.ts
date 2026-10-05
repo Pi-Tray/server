@@ -87,8 +87,11 @@ export type PluginPushHandler = (data: PluginPushHandlerData) => Promise<void>;
 type PluginConfigTemplate_PrimitiveFieldType = "string" | "number" | "boolean";
 type PluginConfigTemplate_FieldType = PluginConfigTemplate_PrimitiveFieldType | "array" | "object";
 
+type PluginConfigTemplate_FieldHint = "password";
+
 type PluginConfigTemplate_BaseField = {
     type: PluginConfigTemplate_FieldType | PluginConfigTemplate_FieldType[];
+    hints?: readonly PluginConfigTemplate_FieldHint[];
 
     // Supports a small markdown subset: links, bold, italic and inline code.
     description?: string;
