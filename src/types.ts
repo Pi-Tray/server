@@ -229,8 +229,3 @@ export interface Plugin<Controls extends PluginLiveControllable = PluginLiveCont
      */
     live?: PluginLiveConfig<Controls>;
 }
-
-/**
- * Identity function that lets TypeScript infer controls so update() only accepts those fields.
- */
-export const define_plugin = <const Controls extends PluginLiveControllable = never>(plugin: Plugin<Controls>): Plugin<Controls> => plugin;
